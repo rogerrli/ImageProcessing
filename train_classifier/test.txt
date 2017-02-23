@@ -1,0 +1,4 @@
+hello there
+thIS is a string
+IS it a string
+it IS

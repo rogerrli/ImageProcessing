@@ -1,4 +1,0 @@
-images/tiger01.jpeg 1 146 6 114 107
-images/tiger02.jpeg 1 87 0 150 159
-images/tiger03.jpeg 1 57 11 172 139
-images/tiger04.jpeg 0
