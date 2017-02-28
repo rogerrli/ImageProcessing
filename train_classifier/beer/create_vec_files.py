@@ -15,6 +15,6 @@ for positive_image in os.listdir(image_directory):
     if positive_image.endswith(".jpg"):
         vec_name = "vec_files/vec" + str(vec_num) + ".vec"
         full_path = image_directory + positive_image
-        full_command = "opencv_createsamples -img " + full_path + " -vec " + vec_name + " -bg " + bg_file + " -num 500"
+        full_command = "opencv_createsamples -img " + full_path + " -vec " + vec_name + " -bg " + bg_file + " -num 50"
         os.system(full_command)
         vec_num = vec_num + 1

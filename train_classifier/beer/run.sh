@@ -20,5 +20,5 @@ say "vector files created"
 python mergevec.py -v vec_files/ -o vec.vec
 say "vector files merged"
 
-opencv_traincascade -data classifier/ -vec vec.vec -bg bg.txt -numStages 12 -minHitRate 0.999 -maxFalseAlarmRate 0.5 -mode ALL -numNeg 3380 -numPos 25000
+opencv_traincascade -data classifier/ -vec vec.vec -bg bg.txt -numStages 12 -minHitRate 0.999 -maxFalseAlarmRate 0.5 -numNeg 3380 -numPos 2500
 say "classifier trained"
