@@ -3,12 +3,16 @@ rm vec.vec
 rm -rf vec_files
 rm -rf classifier
 
+say "bg file deleted, vector file deleted, vec file directory removed, classifier directory removed"
+
 mkdir vec_files
 mkdir classifier
 touch bg.txt
 
+say "vec file directory created, classifier directory created, bg file created"
+
 python create_bg.py -i non_images/
-say "background file created"
+say "background file populated"
 
 python create_vec_files.py -i images/ -n bg.txt
 say "vector files created"

@@ -8,7 +8,7 @@ ap.add_argument("-i", "--images", required=True, help="positive image files dire
 ap.add_argument("-n", "--negative", required=True, help="negative image files directory file")
 args = vars(ap.parse_args())
 
-vec_num = 0
+vec_num = 1
 image_directory = args["images"]
 bg_file = args["negative"]
 for positive_image in os.listdir(image_directory):
