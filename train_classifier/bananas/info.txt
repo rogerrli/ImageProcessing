@@ -1,0 +1,35 @@
+images/bananas0001.jpg 1 480 43 157 383
+images/bananas0002.jpg 1 61 75 507 253
+images/bananas0003.jpg 1 207 342 196 6
+images/bananas0004.jpg 3 194 4 112 185 257 90 214 152 19 130 222 123
+images/bananas0005.jpg 1 408 151 942 563
+images/bananas0006.jpg 1 116 56 368 237
+images/bananas0007.jpg 1 11 128 613 316
+images/bananas0008.jpg 1 6 226 362 193
+images/bananas0009.jpg 1 144 118 255 218
+images/bananas0010.jpg 0
+images/bananas0011.jpg 1 72 156 484 228
+images/bananas0012.jpg 1 117 37 274 583
+images/bananas0013.jpg 1 17 17 469 330
+images/bananas0014.jpg 2 6 70 318 147 66 217 271 242
+images/bananas0015.jpg 1 259 156 255 90
+images/bananas0016.jpg 1 26 18 596 340
+images/bananas0017.jpg 1 105 116 271 227
+images/bananas0018.jpg 1 116 151 283 478
+images/bananas0019.jpg 1 18 65 473 206
+images/bananas0020.jpg 1 48 41 485 513
+images/bananas0021.jpg 1 81 128 510 207
+images/bananas0022.jpg 1 20 81 597 319
+images/bananas0023.jpg 1 162 153 283 446
+images/bananas0024.jpg 1 85 46 237 367
+images/bananas0025.jpg 1 53 36 513 357
+images/bananas0026.jpg 3 10 73 112 268 208 68 100 263 409 64 118 271
+images/bananas0027.jpg 1 128 49 200 518
+images/bananas0028.jpg 1 213 210 159 233
+images/bananas0029.jpg 1 65 11 167 552
+images/bananas0030.jpg 1 100 61 515 328
+images/bananas0031.jpg 1 67 181 237 146
+images/bananas0032.jpg 1 77 91 481 294
+images/bananas0033.jpg 1 24 84 583 243
+images/bananas0034.jpg 1 183 6 368 404
+images/bananas0035.jpg 1 86 14 485 329

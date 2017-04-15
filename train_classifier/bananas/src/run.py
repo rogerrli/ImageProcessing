@@ -1,13 +1,15 @@
 import os
 import opencvSupport
 
-
+images = "images/"
+vec_file = "vec_files/vec.vec"
+info = "info.txt"
 rename = input("Do you need to rename image files (Y/N): ").lower()
 validInput = False
 while not validInput:
     if rename == "y":
         prefix = input("What is the prefix for your files: ")
-        opencvSupport.rename(prefix, "images/")
+        opencvSupport.rename(prefix, images)
         validInput = True
         print("Files renamed")
     elif rename == "n":
@@ -21,7 +23,6 @@ validInput = False
 
 while not validInput:
     if annotate == "y":
-        info = input("Where do you want your txt file to save to (e.g. 'info.txt'): ")
         os.system("opencv_annotation --images=images/ --annotations=" + info)
         validInput = True
         images_annotated = True
@@ -46,14 +47,13 @@ validInput = False
 while not validInput:
     if use_annotations == "y":
         if images_annotated:
-            info = input("Where is your annotations located? (e.g. 'info.txt'): ")
-            os.system("opencv_createsamples -info " + info + " -vec vec_files/vec.vec")
+            os.system("opencv_createsamples -info " + info + " -vec " + vec_file)
         else:
             print("ERROR: You do not have any annotated image files")
             use_annotations = "n"
         validInput = True
     elif use_annotations == "n":
-        opencvSupport.create_vec("images/")
+        opencvSupport.create_vec(images)
         validInput = True
     else:
         use_annotations = input("ERROR: Please use Y/N to indicate whether to use annotated images: ")
@@ -63,7 +63,7 @@ validInput = False
 classifer_trained = False
 while not validInput:
     if train_classifier == "y":
-        os.system("opencv_traincascade -data classifier/ -vec ./vec_files/vec.vec -bg bg.txt -numStages 12 -minHitRate 0.999 -maxFalseAlarmRate 0.5 -numNeg 3380 -numPos 1500")
+        os.system("opencv_traincascade -data classifier/ -vec ./" + vec_file + " -bg bg.txt -numStages 12 -minHitRate 0.999 -maxFalseAlarmRate 0.5 -numNeg 3380 -numPos 1500")
         validInput = True
         classifer_trained = True
     elif train_classifier == "n":
