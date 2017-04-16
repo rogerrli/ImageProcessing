@@ -86,5 +86,4 @@ while not validInput:
 
 if classifer_trained:
         image_folder = input("Location of images to detect (e.g. images/): ")
-        classifier = "classifier/cascade.xml"
-        opencvSupport.detect_object(image_folder, classifier)
+        opencvSupport.detect_object(image_folder)

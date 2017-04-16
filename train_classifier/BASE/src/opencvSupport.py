@@ -25,10 +25,8 @@ def create_bg():
 
 def create_vec(image_directory):
     vec_num = 0
-    accepted_extensions = [".jpeg", ".jpg", ".png"]
     for positive_image in os.listdir(image_directory):
-        file_extension = os.path.splitext(image_directory)[1]
-        if file_extension in accepted_extensions:
+        if positive_image.endswith(".jpg") or positive_image.endswith(".jpeg") or positive_image.endswith(".png"):
             vec_num += 1
             vec_name = "vec_files/vec" + str(vec_num) + ".vec"
             full_path = image_directory + positive_image
@@ -37,11 +35,11 @@ def create_vec(image_directory):
     merge_vec_files("vec_files", "vec_files/vec.vec")
 
 
-def detect_object(image_directory, classifier):
+def detect_object(image_directory):
     for image_file in os.listdir(image_directory):
         image = cv2.imread(image)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        detector = cv2.CascadeClassifier(classifier)
+        detector = cv2.CascadeClassifier(args["cascade"])
         rects = detector.detectMultiScale(gray, scaleFactor=4, minNeighbors=15, minSize=(100, 100))
         for (i, (x, y, w, h)) in enumerate(rects):
             cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
