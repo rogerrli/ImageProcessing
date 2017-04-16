@@ -3,4 +3,10 @@
 read -p 'What is the object you are looking to detect: ' varObject
 
 mkdir $varObject
-cp -r ./BASE/ ./$varObject/
+cd $varObject
+mkdir images
+mkdir non_images
+mkdir classifier
+mkdir vec_files
+touch bg.txt
+touch info.txt
