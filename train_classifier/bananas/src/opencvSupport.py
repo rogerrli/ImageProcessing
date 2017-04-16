@@ -10,7 +10,7 @@ import cv2
 def create_bg():
     bg_file = "bg.txt"
     fo = open(bg_file, "a")
-    for i in range(2,3390):
+    for i in range(2, 3390):
         if i < 10:
             zeros = "000"
         elif i < 100:
