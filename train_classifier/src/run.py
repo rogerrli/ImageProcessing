@@ -37,7 +37,9 @@ images_annotated = False
 validInput = False
 while not validInput:
     if annotate == "y":
-        os.system("opencv_annotation --images=images/ --annotations=" + info)
+        os.chdir(directory)
+        os.system("opencv_annotation --images=images/  --annotations=" + info)
+        os.chdir(os.path.dirname(os.path.dirname(directory)))
         validInput = True
         images_annotated = True
         print("Images annotated")
@@ -59,7 +61,7 @@ while not validInput:
 use_annotations = input("Do you want to use annotated images for analysis (Y/N): ").lower()
 validInput = False
 while not validInput:
-    opencvSupport.create_bg(directory, non_images)
+    opencvSupport.create_bg(directory, os.getcwd())
     if use_annotations == "y":
         if images_annotated:
             os.system("opencv_createsamples -info " + info + " -vec " + vec_file)
@@ -81,6 +83,8 @@ validInput = False
 classifer_trained = False
 if not use_annotations:
     num_images = str(int(image_multiplier) * num_images)
+else:
+    num_images = str(num_images)
 while not validInput:
     if train_classifier == "y":
         os.system("opencv_traincascade -data classifier/ -vec " + vec_file + " -bg " + directory + "bg.txt -numStages 12 -minHitRate 0.999 -maxFalseAlarmRate 0.5 -numNeg 3380 -numPos " + num_images)

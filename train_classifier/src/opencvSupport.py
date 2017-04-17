@@ -20,7 +20,7 @@ def create_bg(directory, non_images):
             zeros = "0"
         else:
             zeros = ""
-        fo.write(directory + "non_images/not_beer" + zeros + str(i) + ".jpg\n")
+        fo.write("non_images/not_beer" + zeros + str(i) + ".jpg\n")
         i += 1
     fo.close()
 
