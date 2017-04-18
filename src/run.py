@@ -2,8 +2,8 @@ import os
 import opencvSupport
 
 #Identify which object/project you want to work on, and adjust any path variables to follow suit
-directory = os.getcwd()
-staple_folders = ["BASE", "new.sh", "README.md", "src", "update_code.sh", ".DS_Store"]
+directory = os.getcwd() + "/objects/"
+staple_folders = [".DS_Store"]
 object_folders = []
 for dir in os.listdir(directory):
     if dir not in staple_folders:
@@ -12,11 +12,11 @@ for dir in os.listdir(directory):
 object_folder = input("Which object would you like to work on: ")
 while object_folder not in object_folders:
     object_folder = input("ERROR: Please select a valid folder: ")
-directory = directory + "/" + object_folder + "/"
+directory = directory + object_folder + "/"
 images = directory + "images/"
 vec_file = directory + "vec_files/vec.vec"
 info = directory + "info.txt"
-non_images = directory + "non_images/"
+non_images = os.path.dirname(os.path.dirname(os.path.dirname(directory))) + "/non_images/"
 classifier = directory + "classifier/"
 
 rename = input("Do you need to rename image files (Y/N): ").lower()

@@ -28,17 +28,18 @@ def create_bg(directory, non_images):
 def create_vec(image_directory, directory, image_multiplier):
     vec_num = 0
     bg_file = "bg.txt"
+    vec_directory = directory + "vec_files/"
     for positive_image in os.listdir(image_directory):
         if positive_image.endswith(".jpg"):
             vec_num += 1
-            vec_name = directory + "vec_files/vec" + str(vec_num) + ".vec"
+            vec_name = vec_directory + "vec" + str(vec_num) + ".vec"
             full_path = image_directory + positive_image
             full_command = "opencv_createsamples -img " + full_path + " -vec " + vec_name + " -bg " + bg_file + " -num " + image_multiplier
             os.system(full_command)
     if vec_num > 1:
-        merge_vec_files("vec_files/", "vec_files/vec.vec")
+        merge_vec_files(vec_directory, vec_directory + "vec.vec")
     else:
-        os.rename(vec_name, directory + "vec_files/vec.vec")
+        os.rename(vec_name, vec_directory + ".vec")
 
 
 def detect_object(image_directory, classifier):
@@ -193,7 +194,7 @@ def merge_vec_files(vec_directory, output_vec_file):
         vec_directory = vec_directory[:-1]
     files = glob.glob('{0}/*.vec'.format(vec_directory))
     if len(files) <= 0:
-        print('Vec files to be mereged could not be found from directory: {0}'.format(vec_directory))
+        print('Vec files to be merged could not be found from directory: {0}'.format(vec_directory))
         sys.exit(1)
     if len(files) == 1:
         print('Only 1 vec file was found in directory: {0}. Cannot merge a single file.'.format(vec_directory))
