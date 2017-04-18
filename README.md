@@ -68,7 +68,9 @@ It creates new folders for every object you want to train a cascade classifier f
   
 
 # What do I have to do to use this?
-Clone the repo. There are a few shell commands you can run to do things
+Clone the repo. 
+You will also need to have OpenCV installed. Check out this great tutorial on how to get it set up [here](http://www.pyimagesearch.com/2016/12/05/macos-install-opencv-3-and-python-3-5/)
+There are a few shell commands you can run to do things
 * If you want to create a new object (and in essence train a new classifier), just run "new.sh". It'll create a subfolder for you automatically with this structure
 * If you want to finally train the classifier, just run "run.sh". It'll ask you a bunch of questions in this order
   1. If you want to rename your images.
