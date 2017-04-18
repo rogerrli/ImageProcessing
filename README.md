@@ -3,6 +3,67 @@ It's me, learning OpenCV, watch me do it, for free
 
 # What does it do?
 It creates new folders for every object you want to train a cascade classifier for. It does NOT supply the sample images (that to come later)
+Here is the folder structure it must follow
+.
+├──objects
+  ├──"object you want to identify"
+    ├──images
+      ├──object0000.jpg
+      ├──...
+      └──object9999.jpg
+    ├──vec_files
+    ├──classifier
+    ├──bg.txt
+    └──info.txt
+  ├──"another object you want to identify"
+  └──"finally another object you want to identify"
+├──src
+  ├──run.py
+  └──opencvsupport.py
+├──non_images
+  ├──non_image0000.jpg
+  ├──non_image0001.jpg
+  ├──...
+  └──non_image9999.jpg
+├──new.sh
+├──run.sh
+└──README.md
+  
+Once you run "run.sh" your object folders should populate like so
+.
+├──objects
+  ├──"object you want to identify"
+    ├──images
+      ├──object0000.jpg
+      ├──...
+      └──object9999.jpg
+    ├──vec_files
+      ├──vec1.vec _(only if you don't use annotations will numbered vec files populate)_
+      ├──...
+      ├──vec9999.vec
+      └──vec.vec
+    ├──classifier
+      ├──param.xml
+      ├──stage0.xml _(the number of stages is dependant on how early the program completes, there may be more or fewer)_
+      ├──...
+      ├──stage20.xml
+      └──cascade.xml _(this is the golden ticket; the file that contains instructions on how to identify objects in images)_
+    ├──bg.txt _(only if you have non_images this file will populate)_
+    └──info.txt _(only if you annotate your images this file will populate)_
+  ├──"another object you want to identify"
+  └──"finally another object you want to identify"
+├──src
+  ├──run.py
+  └──opencvsupport.py
+├──non_images
+  ├──non_image0000.jpg
+  ├──non_image0001.jpg
+  ├──...
+  └──non_image9999.jpg
+├──new.sh
+├──run.sh
+└──README.md
+  
 
 # What do I have to do to use this?
 Clone the repo. There are a few shell commands you can run to do things
