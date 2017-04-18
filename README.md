@@ -81,3 +81,10 @@ Clone the repo. There are a few shell commands you can run to do things
   5. If you want to train the classifier. If you already have a trained classifier, this hefty computational portion of the code can be skipped.
   6. If you already have a trained classifier if you don't want to train the classifier, which leads to
   7. If you want to use the classifier on a set of images.
+  
+# Future Plans
+  * Add a webscraping utility that can grab images for you
+    * As a result, will need to change the annotation tool. May have to build it again so that there is an option to delete a photo during the annotation phase that way we can remove any bad images
+    * The annotation tool should also display the width/height of the annotated area.
+    * The annotation tool could also do post processing to identify which annotated areas are the most similar in size, thereby creating a more uniform classifier. Separate the images into separate folders for each "grouping", then run the training multiple times. As far as I know, there is no way to "re-train" a classifier. 
+  * Create a central database for all the cascade.xml files. This should be used so that a community of individuals can use the cascade trainers, with additional informaiton such as success rate and parameters that should be used for identification.
