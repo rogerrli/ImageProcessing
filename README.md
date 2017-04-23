@@ -1,5 +1,9 @@
 # ImageProcessing
-It's me, learning OpenCV, watch me do it, for free
+It's me, learning OpenCV. 
+
+Progress:
+* Created a way to start a new object project (e.g. I want to start identifying 'x', create a new directory with all the necessary folders/files to support this. The code is fairly rigid on following this structure.
+* Some scripts that query that user for what they want to do with regards to training/using classifiers, instead of the user needing to call the OpenCV commands themself with arguments that are a little finnicky. 
 
 # What does it do?
 It creates new folders for every object you want to train a cascade classifier for. It does NOT supply the sample images (that to come later)
