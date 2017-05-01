@@ -21,8 +21,15 @@ if not os.path.exists(object):
     if "image_path" not in config['objects'][object].keys():
         os.makedirs(directory + "images")
         images = directory + "images/"
+        info = directory + "info.txt"
     else:
         images = config['objects'][object]['image_path']
+        if images[-1] is not "/":
+            images += "/"
+        img_dir = images.split("/")
+        par_dir = "/".join(img_dir[:-1])
+        info = par_dir + "info.txt"
+    open(info, "w+")
     if "negative_images" not in config['objects'][object].keys():
         os.makedirs(directory + "negative_images")
         negative_images = directory + "negative_images/"
@@ -34,11 +41,9 @@ if not os.path.exists(object):
         os.makedirs(directory + "vec_files")
     if not os.path.isfile(directory + "bg.txt"):
         open(directory + "bg.txt", "w+")
-    if not os.path.isfile(directory + "info.txt"):
-        open(directory + "info.txt", "w+")
+
 
 vec_file = directory + "vec_files/vec.vec"
-info = directory + "info.txt"
 classifier = directory + "classifier/"
 rename = input("Do you need to rename image files (Y/N): ").lower()
 validInput = False
@@ -86,6 +91,8 @@ while not validInput:
     opencvSupport.create_bg(directory, negative_images)
     if use_annotations == "y":
         if images_annotated:
+            os.chdir(images)
+            print(os.getcwd())
             os.system("opencv_createsamples -info " + info + " -vec " + vec_file)
             use_annotations = True
         else:

@@ -1,7 +1,7 @@
 {
   "objects": {
     "bananas": {
-      "image_path": "/Users/Roger/Desktop/coding/images/bananas/",
+      "image_path": "/Users/Roger/Desktop/coding/objects/bananas/images/",
       "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01/"
     },
     "goldfish": {
