@@ -9,7 +9,7 @@ import cv2
 
 def create_bg(directory, non_images):
     bg_file = directory + "bg.txt"
-    fo = open(bg_file, "a")
+    fo = open(bg_file, "w")
     i = 0
     for _ in os.listdir(non_images):
         if i < 10:
@@ -20,7 +20,7 @@ def create_bg(directory, non_images):
             zeros = "0"
         else:
             zeros = ""
-        fo.write("non_images/not_beer" + zeros + str(i) + ".jpg\n")
+        fo.write(non_images + "/negative_image" + zeros + str(i) + ".jpg\n")
         i += 1
     fo.close()
 

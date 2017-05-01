@@ -1,0 +1,20 @@
+{
+  "objects": {
+    "bananas": {
+      "image_path": "/Users/Roger/Desktop/coding/images/bananas/",
+      "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01/"
+    },
+    "goldfish": {
+      "image_path": "/Users/Roger/Desktop/coding/images/goldfish/",
+      "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01"
+    },
+    "oranges": {
+      "image_path": "/Users/Roger/Desktop/coding/images/oranges",
+      "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01"
+    },
+    "tigers": {
+      "image_path": "/Users/Roger/Desktop/coding/images/tigers",
+      "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01"
+    }
+  }
+}

@@ -1,24 +1,45 @@
 import os
 import opencvSupport
+import json
 
-#Identify which object/project you want to work on, and adjust any path variables to follow suit
+
+resource = os.getcwd() + "/resource.json"
 directory = os.getcwd() + "/objects/"
-staple_folders = [".DS_Store"]
-object_folders = []
-for dir in os.listdir(directory):
-    if dir not in staple_folders:
-        object_folders.append(dir)
-        print(dir)
-object_folder = input("Which object would you like to work on: ")
-while object_folder not in object_folders:
-    object_folder = input("ERROR: Please select a valid folder: ")
-directory = directory + object_folder + "/"
-images = directory + "images/"
+
+
+with open('config.json', 'r') as f:
+    config = json.load(f)
+
+for object in config['objects'].keys():
+    print(object)
+object = input("Which object would you like to work on: ")
+while object not in config['objects'].keys():
+    object = input("ERROR: Please select a valid object: ")
+
+directory = directory + object + "/"
+if not os.path.exists(object):
+    if "image_path" not in config['objects'][object].keys():
+        os.makedirs(directory + "images")
+        images = directory + "images/"
+    else:
+        images = config['objects'][object]['image_path']
+    if "negative_images" not in config['objects'][object].keys():
+        os.makedirs(directory + "negative_images")
+        negative_images = directory + "negative_images/"
+    else:
+        negative_images = config['objects'][object]['negative_images']
+    if not os.path.exists(directory + "/classifier"):
+        os.makedirs(directory + "classifier")
+    if not os.path.exists(directory + "/vec_files"):
+        os.makedirs(directory + "vec_files")
+    if not os.path.isfile(directory + "bg.txt"):
+        open(directory + "bg.txt", "w+")
+    if not os.path.isfile(directory + "info.txt"):
+        open(directory + "info.txt", "w+")
+
 vec_file = directory + "vec_files/vec.vec"
 info = directory + "info.txt"
-non_images = os.path.dirname(os.path.dirname(os.path.dirname(directory))) + "/non_images/"
 classifier = directory + "classifier/"
-
 rename = input("Do you need to rename image files (Y/N): ").lower()
 validInput = False
 num_images = opencvSupport.num_images(images)
@@ -39,7 +60,7 @@ validInput = False
 while not validInput:
     if annotate == "y":
         os.chdir(directory)
-        os.system("opencv_annotation --images=images/  --annotations=" + info)
+        os.system("opencv_annotation --images=" + images + " --annotations=" + info)
         os.chdir(os.path.dirname(os.path.dirname(directory)))
         validInput = True
         images_annotated = True
@@ -62,7 +83,7 @@ while not validInput:
 use_annotations = input("Do you want to use annotated images for analysis (Y/N): ").lower()
 validInput = False
 while not validInput:
-    opencvSupport.create_bg(directory, os.getcwd())
+    opencvSupport.create_bg(directory, negative_images)
     if use_annotations == "y":
         if images_annotated:
             os.system("opencv_createsamples -info " + info + " -vec " + vec_file)
