@@ -15,18 +15,18 @@ ix, iy, fx, fy = -1, -1, -1, -1
 
 def annotate_images(images, info):
     global img, static_img, img_stack, drawing, first_click
+    info_f = open(info, "w")
     image_dir = images.split("/")
     remove_dir = "/".join(image_dir[:-2]) + "/images_tbd"
-    info_f = open(info, "w")
     anno_incomplete = "/".join(image_dir[:-2]) + "/anno_complete.p"
     anno_images = []
+    # Check to see if the user wants to pick up on their prior annotation, and remove any documents as necessary
     if os.path.isfile(anno_incomplete):
         continue_anno = input("Do you want to pick up where you last left on your annotations? (Y/N): ").lower()
         valid_input = False
         while not valid_input:
             if continue_anno == "y":
-                with open(anno_incomplete, 'r') as anno_f:
-                    anno_images = pickle.load(open(anno_incomplete, 'rb'))
+                anno_images = pickle.load(open(anno_incomplete, 'rb'))
                 valid_input = True
             elif continue_anno == "n":
                 os.remove(anno_incomplete)
@@ -44,14 +44,14 @@ def annotate_images(images, info):
             img_stack = [original]
             coordinate_points = []
             cv2.namedWindow('image')
-            #param = [img_stack, img, static_img, drawing, first_click, [ix, iy, fx, fy]]
             cv2.setMouseCallback('image', draw_rect, [img_stack])
             while 1:
                 cv2.imshow('image', img)
                 k = cv2.waitKey(1) & 0xFF
                 if k == ord('n'):
                     print('n')
-                    info_f.write("/".join(image_dir[-2:]) + image + " " + str(len(coordinate_points)) + " " + " ".join(str(item) for innerlist in coordinate_points for item in innerlist) + "\n")
+                    info_f.write("/".join(image_dir[-2:]) + image + " " + str(len(coordinate_points)) + " " +
+                                 " ".join(str(item) for innerlist in coordinate_points for item in innerlist) + "\n")
                     anno_images.append(image)
                     break
                 elif k == ord('c'):
@@ -87,6 +87,7 @@ def annotate_images(images, info):
                     break
         if end_program:
             break
+    # Cleanup
     if not end_program:
         os.remove(anno_incomplete)
     else:
@@ -98,20 +99,16 @@ def annotate_images(images, info):
 
 def draw_rect(event, x, y, flags, param):
     global ix, iy, fx, fy, drawing, first_click, img, static_img
-    if event == cv2.EVENT_LBUTTONDOWN and first_click:
-        ix, iy = x, y
-    elif event == cv2.EVENT_LBUTTONUP and first_click:
-        first_click = False
-        drawing = True
-    elif event == cv2.EVENT_MOUSEMOVE and drawing:
+    if event == cv2.EVENT_LBUTTONUP:
+        drawing = not drawing
+    elif drawing:
+        if event == cv2.EVENT_MOUSEMOVE:
             cv2.rectangle(static_img, (ix, iy), (x, y), (0, 0, 255), 1)
             img = static_img
             static_img = param[0][-1].copy()
             fx, fy = x, y
-    elif event == cv2.EVENT_LBUTTONUP and not first_click:
-        drawing = False
-        first_click = True
-
+    elif event == cv2.EVENT_LBUTTONDOWN:
+        ix, iy = x, y
 
 
 def create_bg(directory, non_images):
