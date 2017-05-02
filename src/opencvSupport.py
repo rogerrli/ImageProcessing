@@ -18,6 +18,7 @@ def annotate_images(images, info):
     remove_dir = "/".join(image_dir[:-2]) + "/images_tbd"
     info_f = open(info, "w")
     for image in os.listdir(images):
+        end_program = False
         if not image.startswith('.'):
             full_path = images + image
             print(image)
@@ -32,24 +33,42 @@ def annotate_images(images, info):
                 cv2.imshow('image', img)
                 k = cv2.waitKey(1) & 0xFF
                 if k == ord('n'):
+                    print('n')
                     info_f.write("/".join(image_dir[-2:]) + image + " " + str(len(coordinate_points)) + " " + " ".join(str(item) for innerlist in coordinate_points for item in innerlist) + "\n")
                     break
                 elif k == ord('c'):
-                    cv2.rectangle(img, (ix, iy,), (fx, fy), (0, 255, 0), 1)
-                    img_stack.append(img)
-                    coordinate_points.append([ix, iy, fx, fy])
+                    print('c')
+                    if img is not img_stack[-1]:
+                        img_stack.append(img)
+                        cv2.rectangle(img, (ix, iy,), (fx, fy), (0, 255, 0), 1)
+                        if [ix, iy, fx, fy] not in coordinate_points:
+                            coordinate_points.append([ix, iy, fx, fy])
+                    print(coordinate_points)
+                    print(len(img_stack))
                 elif k == ord('d'):
+                    print('d')
                     if len(img_stack) > 1:
                         img_stack.pop()
+                    if len(coordinate_points) > 0:
+                        coordinate_points.pop()
                     img = img_stack[-1]
                     drawing = False
                     first_click = True
+                    print(coordinate_points)
+                    print(len(img_stack))
                 elif k == ord('r'):
+                    print('r')
                     if not os.path.isdir(remove_dir):
                         os.makedirs(remove_dir)
                     shutil.copy(full_path, remove_dir + "/" + image)
                     os.remove(full_path)
                     break
+                elif k == ord('q'):
+                    print('q')
+                    end_program = True
+                    break
+        if end_program:
+            break
     info_f.close()
     cv2.destroyAllWindows()
 

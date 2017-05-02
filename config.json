@@ -5,15 +5,15 @@
       "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01/"
     },
     "goldfish": {
-      "image_path": "/Users/Roger/Desktop/coding/images/goldfish/",
+      "image_path": "/Users/Roger/Desktop/coding/objects/goldfish/images/",
       "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01"
     },
     "oranges": {
-      "image_path": "/Users/Roger/Desktop/coding/images/oranges",
+      "image_path": "/Users/Roger/Desktop/coding/objects/oranges/images/",
       "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01"
     },
     "tigers": {
-      "image_path": "/Users/Roger/Desktop/coding/images/tigers",
+      "image_path": "/Users/Roger/Desktop/coding/objects/tigers/images/",
       "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01"
     }
   }
