@@ -62,11 +62,14 @@ validInput = False
 while not validInput:
     if annotate == "y":
         os.chdir(directory)
-        opencvSupport.annotate_images(images, info)
+        anno_not_complete = opencvSupport.annotate_images(images, info)
         os.chdir(os.path.dirname(os.path.dirname(directory)))
         validInput = True
         images_annotated = True
-        print("Images annotated")
+        if anno_not_complete:
+            print("Image annotation paused")
+        else:
+            print("Images annotated")
     elif annotate == "n":
         validInput = True
         have_annotate = input("Do you have annotated imaged (Y/N): ").lower()

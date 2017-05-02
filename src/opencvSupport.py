@@ -6,6 +6,7 @@ import argparse
 import traceback
 import cv2
 import shutil
+import pickle
 
 drawing = False
 first_click = True
@@ -17,9 +18,24 @@ def annotate_images(images, info):
     image_dir = images.split("/")
     remove_dir = "/".join(image_dir[:-2]) + "/images_tbd"
     info_f = open(info, "w")
+    anno_incomplete = "/".join(image_dir[:-2]) + "/anno_complete.p"
+    anno_images = []
+    if os.path.isfile(anno_incomplete):
+        continue_anno = input("Do you want to pick up where you last left on your annotations? (Y/N): ").lower()
+        valid_input = False
+        while not valid_input:
+            if continue_anno == "y":
+                with open(anno_incomplete, 'r') as anno_f:
+                    anno_images = pickle.load(open(anno_incomplete, 'rb'))
+                valid_input = True
+            elif continue_anno == "n":
+                os.remove(anno_incomplete)
+                valid_input = True
+            else:
+                continue_anno = input("ERROR: Please choose either Y or N: ")
     for image in os.listdir(images):
         end_program = False
-        if not image.startswith('.'):
+        if not image.startswith('.') and image not in anno_images:
             full_path = images + image
             print(image)
             img = cv2.imread(full_path)
@@ -28,6 +44,7 @@ def annotate_images(images, info):
             img_stack = [original]
             coordinate_points = []
             cv2.namedWindow('image')
+            #param = [img_stack, img, static_img, drawing, first_click, [ix, iy, fx, fy]]
             cv2.setMouseCallback('image', draw_rect, [img_stack])
             while 1:
                 cv2.imshow('image', img)
@@ -35,6 +52,7 @@ def annotate_images(images, info):
                 if k == ord('n'):
                     print('n')
                     info_f.write("/".join(image_dir[-2:]) + image + " " + str(len(coordinate_points)) + " " + " ".join(str(item) for innerlist in coordinate_points for item in innerlist) + "\n")
+                    anno_images.append(image)
                     break
                 elif k == ord('c'):
                     print('c')
@@ -69,8 +87,13 @@ def annotate_images(images, info):
                     break
         if end_program:
             break
+    if not end_program:
+        os.remove(anno_incomplete)
+    else:
+        pickle.dump(anno_images, open(anno_incomplete, 'wb'))
     info_f.close()
     cv2.destroyAllWindows()
+    return end_program
 
 
 def draw_rect(event, x, y, flags, param):
