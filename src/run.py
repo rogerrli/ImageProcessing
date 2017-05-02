@@ -27,9 +27,8 @@ if not os.path.exists(object):
         if images[-1] is not "/":
             images += "/"
         img_dir = images.split("/")
-        par_dir = "/".join(img_dir[:-1])
+        par_dir = "/".join(img_dir[:-2]) + "/"
         info = par_dir + "info.txt"
-    open(info, "w+")
     if "negative_images" not in config['objects'][object].keys():
         os.makedirs(directory + "negative_images")
         negative_images = directory + "negative_images/"
@@ -39,8 +38,6 @@ if not os.path.exists(object):
         os.makedirs(directory + "classifier")
     if not os.path.exists(directory + "/vec_files"):
         os.makedirs(directory + "vec_files")
-    if not os.path.isfile(directory + "bg.txt"):
-        open(directory + "bg.txt", "w+")
 
 
 vec_file = directory + "vec_files/vec.vec"
@@ -65,7 +62,7 @@ validInput = False
 while not validInput:
     if annotate == "y":
         os.chdir(directory)
-        os.system("opencv_annotation --images=" + images + " --annotations=" + info)
+        opencvSupport.annotate_images(images, info)
         os.chdir(os.path.dirname(os.path.dirname(directory)))
         validInput = True
         images_annotated = True
@@ -92,7 +89,6 @@ while not validInput:
     if use_annotations == "y":
         if images_annotated:
             os.chdir(images)
-            print(os.getcwd())
             os.system("opencv_createsamples -info " + info + " -vec " + vec_file)
             use_annotations = True
         else:

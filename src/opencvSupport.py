@@ -5,6 +5,7 @@ import struct
 import argparse
 import traceback
 import cv2
+import shutil
 
 drawing = False
 first_click = True
@@ -12,28 +13,44 @@ ix, iy, fx, fy = -1, -1, -1, -1
 
 
 def annotate_images(images, info):
-    global img, static_img, img_stack
+    global img, static_img, img_stack, drawing, first_click
+    image_dir = images.split("/")
+    remove_dir = "/".join(image_dir[:-2]) + "/images_tbd"
+    info_f = open(info, "w")
     for image in os.listdir(images):
-        full_path = images + image
-        img = cv2.imread(full_path)
-        static_img = cv2.imread(full_path)
-        original = cv2.imread(full_path)
-        img_stack = [original]
-        cv2.namedWindow('image')
-        cv2.setMouseCallback('image', draw_rect, [img_stack])
-        while 1:
-            cv2.imshow('image', img)
-            k = cv2.waitKey(1) & 0xFF
-            if k == ord('n'):
-                break
-            elif k == ord('c'):
-                cv2.rectangle(img, (ix, iy,), (fx, fy), (0, 255, 0), 1)
-                img_stack.append(img)
-                #store information into info.txt
-            elif k == ord('d'):
-                if len(img_stack) > 1:
-                    img_stack.pop()
-                img = img_stack[-1]
+        if not image.startswith('.'):
+            full_path = images + image
+            print(image)
+            img = cv2.imread(full_path)
+            static_img = cv2.imread(full_path)
+            original = cv2.imread(full_path)
+            img_stack = [original]
+            coordinate_points = []
+            cv2.namedWindow('image')
+            cv2.setMouseCallback('image', draw_rect, [img_stack])
+            while 1:
+                cv2.imshow('image', img)
+                k = cv2.waitKey(1) & 0xFF
+                if k == ord('n'):
+                    info_f.write("/".join(image_dir[-2:]) + image + " " + str(len(coordinate_points)) + " " + " ".join(str(item) for innerlist in coordinate_points for item in innerlist) + "\n")
+                    break
+                elif k == ord('c'):
+                    cv2.rectangle(img, (ix, iy,), (fx, fy), (0, 255, 0), 1)
+                    img_stack.append(img)
+                    coordinate_points.append([ix, iy, fx, fy])
+                elif k == ord('d'):
+                    if len(img_stack) > 1:
+                        img_stack.pop()
+                    img = img_stack[-1]
+                    drawing = False
+                    first_click = True
+                elif k == ord('r'):
+                    if not os.path.isdir(remove_dir):
+                        os.makedirs(remove_dir)
+                    shutil.copy(full_path, remove_dir + "/" + image)
+                    os.remove(full_path)
+                    break
+    info_f.close()
     cv2.destroyAllWindows()
 
 
@@ -48,10 +65,10 @@ def draw_rect(event, x, y, flags, param):
             cv2.rectangle(static_img, (ix, iy), (x, y), (0, 0, 255), 1)
             img = static_img
             static_img = param[0][-1].copy()
+            fx, fy = x, y
     elif event == cv2.EVENT_LBUTTONUP and not first_click:
         drawing = False
         first_click = True
-        fx, fy = x, y
 
 
 
