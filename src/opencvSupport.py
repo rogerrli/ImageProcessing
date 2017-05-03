@@ -340,3 +340,11 @@ def merge_vec_files(vec_directory, output_vec_file):
     except Exception as e:
         exception_response(e)
 
+
+def error_handle(error_type, e):
+    print("******************")
+    if error_type == KeyError:
+        if e == 'classifier_locations':
+            print("ERROR: Please make sure that the classifier_location is setup")
+        print(e)
+    sys.exit()

@@ -1,6 +1,7 @@
 import os
 import opencvSupport
 import json
+import sys
 
 
 def setup_from_config():
@@ -19,7 +20,12 @@ def setup_from_config():
     subject = input("Which subject would you like to work on: ")
     while subject not in config['subjects'].keys():
         subject = input("ERROR: Please select a valid subject: ")
-    directory = config['subjects'][subject]["classifier_location"]
+    try:
+        directory = config['subjects'][subject]["classifier_locations"]
+    except KeyError as e:
+        print(dir(e))
+        opencvSupport.error_handle(KeyError, e)
+
     if not os.path.exists(subject):
         if "image_path" not in config['subjects'][subject].keys():
             os.makedirs(directory + "images")
