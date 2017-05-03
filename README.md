@@ -8,8 +8,8 @@ Progress:
 
 # What does it do?
 It simplifies the process of creating a haar cascade classifier into simple (yes/no) questions, granted you filled in your configuration file correctly. 
-> Here is the folder structure where the code lives is expecting to look like
-
+Here is the folder structure where the code lives is expecting to look like
+```
     ├──src
     │   ├──run.py
     │   └──opencvsupport.py
@@ -17,8 +17,8 @@ It simplifies the process of creating a haar cascade classifier into simple (yes
     ├──new.sh
     ├──run.sh
     └──README.md
-    
-> Here is what the config.json is expecting
+```    
+Here is what the config.json is expecting
 ```json
     {
         "subjects": {
@@ -33,8 +33,8 @@ It simplifies the process of creating a haar cascade classifier into simple (yes
         }           
     }
 ```
-> This is the "ideal" setup to keep all things where they belong
-
+This is the "ideal" setup to keep all things where they belong
+```
     .
     ├──subjects
     │   ├──"subject you want to identify"
@@ -48,9 +48,9 @@ It simplifies the process of creating a haar cascade classifier into simple (yes
     │   │   │   ├──...
     │   │   │   └──another_subject9999.jpg   
     │   └──"finally another object you want to identify"
-
-> This is the what it will look like after you run through the program
-
+```
+ This is the what it will look like after you run through the program
+```
     .
     ├──subjects
     │   ├──"subject you want to identify"
@@ -74,7 +74,7 @@ It simplifies the process of creating a haar cascade classifier into simple (yes
     │   │   └──info.txt (only if you annotate your images this file will populate)
     │   ├──"another object you want to identify"
     │   └──"finally another object you want to identify"
-  
+```  
 
 # What do I have to do to use this?
 Clone the repo. 
