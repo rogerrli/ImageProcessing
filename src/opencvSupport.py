@@ -129,10 +129,9 @@ def create_bg(directory, non_images):
     fo.close()
 
 
-def create_vec(image_directory, directory, image_multiplier):
+def create_vec(image_directory, vec_directory, image_multiplier):
     vec_num = 0
     bg_file = "bg.txt"
-    vec_directory = directory + "vec_files/"
     for positive_image in os.listdir(image_directory):
         if positive_image.endswith(".jpg"):
             vec_num += 1
@@ -146,7 +145,7 @@ def create_vec(image_directory, directory, image_multiplier):
         os.rename(vec_name, vec_directory + ".vec")
 
 
-def detect_object(image_directory, classifier):
+def detect_subject(image_directory, classifier):
     for image_file in os.listdir(image_directory):
         if image_file != ".DS_Store":
             full_path = image_directory + image_file
@@ -157,7 +156,7 @@ def detect_object(image_directory, classifier):
             for (i, (x, y, w, h)) in enumerate(rects):
                 cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
                 cv2.putText(image, "#{}".format(i + 1), (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
-            cv2.imshow("Objects", image)
+            cv2.imshow("Subject", image)
             cv2.waitKey(0)
 
 
