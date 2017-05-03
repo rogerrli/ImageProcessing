@@ -1,0 +1,24 @@
+{
+  "subjects": {
+    "bananas": {
+      "classifier_location": "/Users/Roger/Desktop/coding/subjects/bananas/",
+      "image_path": "/Users/Roger/Desktop/coding/subjects/bananas/images/",
+      "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01/"
+    },
+    "goldfish": {
+      "classifier_location": "/Users/Roger/Desktop/coding/subjects/goldfish/",
+      "image_path": "/Users/Roger/Desktop/coding/subjects/goldfish/images/",
+      "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01"
+    },
+    "oranges": {
+      "classifier_location": "/Users/Roger/Desktop/coding/subjects/oranges/",
+      "image_path": "/Users/Roger/Desktop/coding/subjects/oranges/images/",
+      "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01"
+    },
+    "tigers": {
+      "classifier_location": "/Users/Roger/Desktop/coding/subjects/tigers/",
+      "image_path": "/Users/Roger/Desktop/coding/subjects/tigers/images/",
+      "negative_images": "/Users/Roger/Desktop/coding/negative_images/set_01"
+    }
+  }
+}

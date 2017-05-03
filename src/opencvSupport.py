@@ -5,11 +5,115 @@ import struct
 import argparse
 import traceback
 import cv2
+import shutil
+import pickle
+
+drawing = False
+first_click = True
+ix, iy, fx, fy = -1, -1, -1, -1
+
+
+def annotate_images(images, info):
+    global img, static_img, img_stack, drawing, first_click
+    info_f = open(info, "w")
+    image_dir = images.split("/")
+    remove_dir = "/".join(image_dir[:-2]) + "/images_tbd"
+    anno_incomplete = "/".join(image_dir[:-2]) + "/anno_complete.p"
+    anno_images = []
+    # Check to see if the user wants to pick up on their prior annotation, and remove any documents as necessary
+    if os.path.isfile(anno_incomplete):
+        continue_anno = input("Do you want to pick up where you last left on your annotations? (Y/N): ").lower()
+        valid_input = False
+        while not valid_input:
+            if continue_anno == "y":
+                anno_images = pickle.load(open(anno_incomplete, 'rb'))
+                valid_input = True
+            elif continue_anno == "n":
+                os.remove(anno_incomplete)
+                valid_input = True
+            else:
+                continue_anno = input("ERROR: Please choose either Y or N: ")
+    for image in os.listdir(images):
+        end_program = False
+        if not image.startswith('.') and image not in anno_images:
+            full_path = images + image
+            print(image)
+            img = cv2.imread(full_path)
+            static_img = cv2.imread(full_path)
+            original = cv2.imread(full_path)
+            img_stack = [original]
+            coordinate_points = []
+            cv2.namedWindow('image')
+            cv2.setMouseCallback('image', draw_rect, [img_stack])
+            while 1:
+                cv2.imshow('image', img)
+                k = cv2.waitKey(1) & 0xFF
+                if k == ord('n'):
+                    print('n')
+                    info_f.write("/".join(image_dir[-2:]) + image + " " + str(len(coordinate_points)) + " " +
+                                 " ".join(str(item) for innerlist in coordinate_points for item in innerlist) + "\n")
+                    anno_images.append(image)
+                    break
+                elif k == ord('c'):
+                    print('c')
+                    if img is not img_stack[-1]:
+                        img_stack.append(img)
+                        cv2.rectangle(img, (ix, iy,), (fx, fy), (0, 255, 0), 1)
+                        if [ix, iy, fx, fy] not in coordinate_points:
+                            coordinate_points.append([ix, iy, fx, fy])
+                    print(coordinate_points)
+                    print(len(img_stack))
+                elif k == ord('d'):
+                    print('d')
+                    if len(img_stack) > 1:
+                        img_stack.pop()
+                    if len(coordinate_points) > 0:
+                        coordinate_points.pop()
+                    img = img_stack[-1]
+                    drawing = False
+                    first_click = True
+                    print(coordinate_points)
+                    print(len(img_stack))
+                elif k == ord('r'):
+                    print('r')
+                    if not os.path.isdir(remove_dir):
+                        os.makedirs(remove_dir)
+                    shutil.copy(full_path, remove_dir + "/" + image)
+                    os.remove(full_path)
+                    break
+                elif k == ord('q'):
+                    print('q')
+                    end_program = True
+                    break
+        if end_program:
+            break
+    # Cleanup
+    if not end_program:
+        os.remove(anno_incomplete)
+    else:
+        pickle.dump(anno_images, open(anno_incomplete, 'wb'))
+    info_f.close()
+    cv2.destroyAllWindows()
+    return end_program
+
+
+def draw_rect(event, x, y, flags, param):
+    global ix, iy, fx, fy, drawing, first_click, img, static_img
+    if event == cv2.EVENT_LBUTTONUP:
+        drawing = not drawing
+    elif drawing:
+        if event == cv2.EVENT_MOUSEMOVE:
+            cv2.rectangle(static_img, (ix, iy), (x, y), (0, 0, 255), 1)
+            img = static_img
+            static_img = param[0][-1].copy()
+            fx, fy = x, y
+    elif event == cv2.EVENT_LBUTTONDOWN:
+        ix, iy = x, y
 
 
 def create_bg(directory, non_images):
     bg_file = directory + "bg.txt"
-    fo = open(bg_file, "a")
+    fo = open(bg_file, "w")
     i = 0
     for _ in os.listdir(non_images):
         if i < 10:
@@ -20,15 +124,14 @@ def create_bg(directory, non_images):
             zeros = "0"
         else:
             zeros = ""
-        fo.write("non_images/not_beer" + zeros + str(i) + ".jpg\n")
+        fo.write(non_images + "/negative_image" + zeros + str(i) + ".jpg\n")
         i += 1
     fo.close()
 
 
-def create_vec(image_directory, directory, image_multiplier):
+def create_vec(image_directory, vec_directory, image_multiplier):
     vec_num = 0
     bg_file = "bg.txt"
-    vec_directory = directory + "vec_files/"
     for positive_image in os.listdir(image_directory):
         if positive_image.endswith(".jpg"):
             vec_num += 1
@@ -42,7 +145,7 @@ def create_vec(image_directory, directory, image_multiplier):
         os.rename(vec_name, vec_directory + ".vec")
 
 
-def detect_object(image_directory, classifier):
+def detect_subject(image_directory, classifier):
     for image_file in os.listdir(image_directory):
         if image_file != ".DS_Store":
             full_path = image_directory + image_file
@@ -53,7 +156,7 @@ def detect_object(image_directory, classifier):
             for (i, (x, y, w, h)) in enumerate(rects):
                 cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
                 cv2.putText(image, "#{}".format(i + 1), (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
-            cv2.imshow("Objects", image)
+            cv2.imshow("Subject", image)
             cv2.waitKey(0)
 
 
