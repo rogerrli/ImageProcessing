@@ -21,32 +21,27 @@ def setup_from_config():
     while subject not in config['subjects'].keys():
         subject = input("ERROR: Please select a valid subject: ")
     try:
-        directory = config['subjects'][subject]["classifier_locations"]
+        directory = config['subjects'][subject]["classifier_location"]
+        if not os.path.exists(directory):
+            opencvSupport.error_handle("PathDoesNotExist", "classifier_location")
     except KeyError as e:
         print(dir(e))
         opencvSupport.error_handle(KeyError, e)
-
-    if not os.path.exists(subject):
-        if "image_path" not in config['subjects'][subject].keys():
-            os.makedirs(directory + "images")
-            images = directory + "images/"
-            info = directory + "info.txt"
-        else:
-            images = config['subjects'][subject]['image_path']
-            if images[-1] is not "/":
-                images += "/"
-            img_dir = images.split("/")
-            par_dir = "/".join(img_dir[:-2]) + "/"
-            info = par_dir + "info.txt"
-        if "negative_images" not in config['subjects'][subject].keys():
-            os.makedirs(directory + "negative_images")
-            negative_images = directory + "negative_images/"
-        else:
-            negative_images = config['subjects'][subject]['negative_images']
-        if not os.path.exists(directory + "/classifier"):
-            os.makedirs(directory + "classifier")
-        if not os.path.exists(directory + "/vec_files"):
-            os.makedirs(directory + "vec_files")
+    images = config['subjects'][subject]['image_path']
+    if images[-1] is not "/":
+        images += "/"
+    if not os.path.exists(images):
+        opencvSupport.error_handle("PathDoesNotExist", "image_path")
+    img_dir = images.split("/")
+    par_dir = "/".join(img_dir[:-2]) + "/"
+    info = par_dir + "info.txt"
+    negative_images = config['subjects'][subject]['negative_images']
+    if not os.path.exists(negative_images):
+        opencvSupport.error_handle("PathDoesNotExist", "negative_images")
+    if not os.path.exists(directory + "/classifier"):
+        os.makedirs(directory + "classifier")
+    if not os.path.exists(directory + "/vec_files"):
+        os.makedirs(directory + "vec_files")
     vec = directory + "vec_files/"
     classifier = directory + "classifier/"
     opencvSupport.create_bg(directory, negative_images)
@@ -113,7 +108,7 @@ def create_samples(images, info, images_annotated, vec):
     :param images: The directory from where the images are located
     :param info: The directory from where the info.txt will be located
     :param images_annotated: Boolean if the images have been annotated
-    :param vec:
+    :param vec: The directory from where the vec.vec file will be located
     """
     use_annotations = input("Do you want to use annotated images for analysis (Y/N): ").lower()
     valid_input = False
@@ -139,6 +134,13 @@ def create_samples(images, info, images_annotated, vec):
 
 
 def create_classifier(images, use_annotations, image_multiplier, directory):
+    """
+    :param images: The directory from where the images are located
+    :param use_annotations: Boolean whether to use the annotations (info.txt) or not (create samples)
+    :param image_multiplier: Numeric of how many image copies to make if not using the annotations
+    :param directory: The main directory to store the files into. Used only for the opencv_traincascade function to
+    dictate the location of the bg.txt file.
+    """
     train_classifier = input("Do you want to train the classifier (Y/N): ").lower()
     valid_input = False
     classifier_trained = False
@@ -173,6 +175,9 @@ def create_classifier(images, use_annotations, image_multiplier, directory):
 
 
 def use_classifier(classifier_trained):
+    """
+    :param classifier_trained: Boolean whether to use the classifier on a separate set of images for object detection
+    """
     if classifier_trained:
         print("NEED TO ADD CODE HERE YO")
         opencvSupport.detect_subject(images, classifier + "cascade.xml")

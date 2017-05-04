@@ -14,6 +14,15 @@ ix, iy, fx, fy = -1, -1, -1, -1
 
 
 def annotate_images(images, info):
+    """
+    This is a rebuild of opencv_annotation tool. This tool will open the image, allow the user to draw a box on the
+    image to segment where the subject is located. It also supports multiple subjects per image, removing a prior
+    annotation, and moving to the next image. A new feature that has been added is the ability to delete images during
+    annotation, allowing for a cleaner set of images to persist in the data set. The deleted images are transferred to
+    folder for the user to delete permanently.
+    :param images: The directory where the images are located.
+    :param info: The path location of where the info.txt file is located that correspond to the images
+    """
     global img, static_img, img_stack, drawing, first_click
     info_f = open(info, "w")
     image_dir = images.split("/")
@@ -98,6 +107,17 @@ def annotate_images(images, info):
 
 
 def draw_rect(event, x, y, flags, param):
+    """
+    Support method for annotate_images that performs the drawing of the rectangle based on a listener on the mouse
+    clicking.
+    :param event: The event (e.g. down click, up click)
+    :param x: The x coordinate where the mouse was located at the time of the event
+    :param y: The y coordinate where the mouse was located at the time of the event
+    :param flags: Not used
+    :param param: Argument to pass in unique arguments. For this use case, params is an list with a list at param[0].
+    This nested list is a stack of images, each stack being an edited version of the image for every subsequent
+    annotation on the same image.
+    """
     global ix, iy, fx, fy, drawing, first_click, img, static_img
     if event == cv2.EVENT_LBUTTONUP:
         drawing = not drawing
@@ -112,6 +132,11 @@ def draw_rect(event, x, y, flags, param):
 
 
 def create_bg(directory, non_images):
+    """
+    This creates the bg.txt file, which is a listing of where all the background (negative) images exist.
+    :param directory: The location of the main directory of the function.
+    :param non_images: The location of the negative_images
+    """
     bg_file = directory + "bg.txt"
     fo = open(bg_file, "w")
     i = 0
@@ -130,6 +155,13 @@ def create_bg(directory, non_images):
 
 
 def create_vec(image_directory, vec_directory, image_multiplier):
+    """
+    This creates .vec files, one for each positive image used. merge_vec will have to be used in order to create the
+    vec.vec file, a combination of all the vec files created from this function.
+    :param image_directory: The directory where the images are located
+    :param vec_directory: The directory where the vec files should be stored
+    :param image_multiplier: The number of overlays each positive image should be used.
+    """
     vec_num = 0
     bg_file = "bg.txt"
     for positive_image in os.listdir(image_directory):
@@ -146,6 +178,11 @@ def create_vec(image_directory, vec_directory, image_multiplier):
 
 
 def detect_subject(image_directory, classifier):
+    """
+    This will use the classifier that has been trained to detect the subject on the images provided.
+    :param image_directory: The directory where the images are located
+    :param classifier: The directory where the classifier is located
+    """
     for image_file in os.listdir(image_directory):
         if image_file != ".DS_Store":
             full_path = image_directory + image_file
@@ -161,6 +198,11 @@ def detect_subject(image_directory, classifier):
 
 
 def num_images(image_directory):
+    """
+    This will count how many images there are. The output is used for calling opencv commands that require numerical
+    inputs that scale with the number of images that exist.
+    :param image_directory: The directory where the images are located
+    """
     output = 0
     for image_file in os.listdir(image_directory):
         if image_file != ".DS_Store":
@@ -169,6 +211,12 @@ def num_images(image_directory):
 
 
 def rename(prefix, folder):
+    """
+    This will rename the images so that they follow a consistent naming schema. Currently this handles up to 10,000
+    unique images.
+    :param prefix: The prefix to use for the image
+    :param folder: The location of the images
+    """
     index = 0
     for file in os.listdir(folder):
         if file != ".DS_Store":
@@ -186,8 +234,12 @@ def rename(prefix, folder):
 
 
 def resize(directory):
+    """
+    This will reformat the images to be a maximum of 750 pixels on one edge. It will scale up/down and keep the ratio
+    the same for the image.
+    :param directory: The path for the image that will be resized
+    """
     image = cv2.imread(directory)
-    print(directory)
     (height, width) = image.shape[:2]
     if height > width:
         r = 750.0 / height
@@ -235,7 +287,8 @@ File Description:
 
     To use the function:
     (1) Place all .vec files to be merged in a single directory (vec_directory).
-    (2) Navigate to this file in your CLI (terminal or cmd) and type "python mergevec.py -v your_vec_directory -o your_output_filename".
+    (2) Navigate to this file in your CLI (terminal or cmd) and type "python mergevec.py -v your_vec_directory -o
+    your_output_filename".
 
         The first argument (-v) is the name of the directory containing the .vec files
         The second argument (-o) is the name of the output file
@@ -309,7 +362,7 @@ def merge_vec_files(vec_directory, output_vec_file):
             val = struct.unpack('<iihh', content[:12])
             prev_image_size = val[1]
     except IOError as e:
-        print('An IO error occured while processing the file: {0}'.format(f))
+        print('An IO error occurred while processing the file: {0}'.format(f))
         exception_response(e)
     total_num_images = 0
     for f in files:
@@ -320,13 +373,14 @@ def merge_vec_files(vec_directory, output_vec_file):
                 num_images = val[0]
                 image_size = val[1]
                 if image_size != prev_image_size:
-                    err_msg = """The image sizes in the .vec files differ. These values must be the same. \n The image size of file {0}: {1}\n
-                        The image size of previous files: {0}""".format(f, image_size, prev_image_size)
+                    err_msg = """The image sizes in the .vec files differ. These values must be the same.
+                     \n The image size of file {0}: {1}
+                     \nThe image size of previous files: {0}""".format(f, image_size, prev_image_size)
                     sys.exit(err_msg)
 
                 total_num_images += num_images
         except IOError as e:
-            print('An IO error occured while processing the file: {0}'.format(f))
+            print('An IO error occurred while processing the file: {0}'.format(f))
             exception_response(e)
     header = struct.pack('<iihh', total_num_images, image_size, 0, 0)
     try:
@@ -344,7 +398,8 @@ def merge_vec_files(vec_directory, output_vec_file):
 def error_handle(error_type, e):
     print("******************")
     if error_type == KeyError:
-        if e == 'classifier_locations':
-            print("ERROR: Please make sure that the classifier_location is setup")
-        print(e)
+        print("ERROR: Please make sure that the " + str(e) + " is set up correctly")
+    elif error_type == "PathDoesNotExist":
+        print("ERROR: Please make sure that the path in " + e + " exists")
+    print("******************")
     sys.exit()
